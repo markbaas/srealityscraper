@@ -24,7 +24,7 @@ scrapy crawl sreality_appartments_rent --loglevel INFO
 
 The scraper basically plugs in into the sreality.cz estates api. So there is one base class `SrealityBaseSpider` that contains the actual code. The four implementation spiders override the base class and the base spider knows what to do using the scraper name.
 
-In order to avoid having huge files, a custom json exporter is included so that files are output splitted with in each file 1000 items.
+In order to avoid having huge files, a custom json exporter is included so that files are output splitted with in each file 100 items.
 
 File are not really readable using a text editor, so it is recommended to use `jq` for parsing the json files.
 

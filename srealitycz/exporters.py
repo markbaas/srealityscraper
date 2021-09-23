@@ -10,7 +10,7 @@ class SplittedJsonItemExporter(BaseItemExporter):
     A modified version of JsonItemExporter to allow outputting to splitted files.
     """
 
-    def __init__(self, output_path, batch_size=1000, **kwargs):
+    def __init__(self, output_path, batch_size=100, **kwargs):
         super().__init__(dont_fail=True, **kwargs)
         self.output_path: Path = Path(output_path)
         self.batch_size = batch_size
@@ -28,35 +28,23 @@ class SplittedJsonItemExporter(BaseItemExporter):
         self.encoder = ScrapyJSONEncoder(**self._kwargs)
         self.items_written = 0
         self.file = None
-
-    def _beautify_newline(self):
-        if self.indent is not None:
-            self.file.write(b"\n")
-
-    def start_exporting_batch(self, item):
-        self.file = open(self.output_path / (str(item["_id"]) + ".json"), "wb")
-        self.file.write(b"[")
+        self.buffer = []
 
     def finish_exporting_batch(self):
-        self._beautify_newline()
-        self.file.write(b"]")
+        first_item_id = self.buffer[0]["_id"]
+        last_item_id = self.buffer[-1]["_id"]
 
-        self.file.close()
+        with open(self.output_path / f"{first_item_id}_{last_item_id}.json", "w") as f:
+            f.write(self.encoder.encode(self.buffer))
+
+        self.buffer = []
         self.items_written = 0
 
+    def finish_exporting(self):
+        self.finish_exporting_batch()
+
     def export_item(self, item):
-        if self.items_written == 0:
-            self.start_exporting_batch(item)
-        else:
-            self.file.write(b",")
-
-        self._beautify_newline()
-
-        itemdict = dict(self._get_serialized_fields(item))
-        data = self.encoder.encode(itemdict)
-        
-        self.file.write(to_bytes(data, self.encoding))
-        self._beautify_newline()
+        self.buffer.append(item)
 
         self.items_written += 1
 

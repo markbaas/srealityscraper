@@ -36,7 +36,9 @@ class SrealityBaseSpider(scrapy.Spider):
             )
 
     def parse_details(self, response):
-        item = response.meta["item"]
-        item["detail"] = response.json()
-        item["_id"] = item["hash_id"]
-        yield item
+        listing = response.meta["item"]
+        yield {
+            "_id": listing["hash_id"],
+            "detailed_info": response.json(),
+            "listing_info": listing
+        }
