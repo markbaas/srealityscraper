@@ -28,6 +28,8 @@ In order to avoid having huge files, a custom json exporter is included so that 
 
 File are not really readable using a text editor, so it is recommended to use `jq` for parsing the json files.
 
+I did not experience any issues with banning, so no specific settings have been modified here.
+
 ## What's next?
 
 Ideally the data should be outputted to a mongo or a redis store and then processed by a Spark job for cleaned data.
