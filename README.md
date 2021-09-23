@@ -17,7 +17,7 @@ For each category and type there is one scraper. You can run the with the follow
 scrapy crawl sreality_houses_sale --loglevel INFO
 scrapy crawl sreality_houses_rent --loglevel INFO
 scrapy crawl sreality_appartments_sale --loglevel INFO
-scrapy crawl sreality_appartments_rent --loglevel INF
+scrapy crawl sreality_appartments_rent --loglevel INFO
 ```
 
 ## Technical considerations
